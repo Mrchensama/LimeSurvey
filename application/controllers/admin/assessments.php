@@ -29,10 +29,10 @@ class Assessments extends Survey_Common_Action
      * Routes to the correct sub-action
      *
      * @access public
-     * @param int $iSurveyID
+     * @param int $iSurveyID Survey ID
      * @return void
      */
-    public function index($iSurveyID)
+    public function index(int $iSurveyID)
     {
         $iSurveyID = sanitize_int($iSurveyID);
         $sAction = CHtml::encode(Yii::app()->request->getParam('action'));
@@ -78,11 +78,12 @@ class Assessments extends Survey_Common_Action
     /**
      * Renders template(s) wrapped in header and footer
      *
-     * @param string $sAction Current action, the folder to fetch views from
-     * @param string $aViewUrls View url(s)
-     * @param array $aData Data to be passed on. Optional.
+     * @param string $sAction    Current action, the folder to fetch views from
+     * @param string $aViewUrls  View url(s)
+     * @param array  $aData Data to be passed on. Optional.
+     * @return void
      */
-    protected function _renderWrappedTemplate($sAction = 'assessments', $aViewUrls = array(), $aData = array(), $sRenderFile = false)
+    protected function _renderWrappedTemplate(string $sAction = 'assessments', array $aViewUrls = array(), array $aData = array(), bool $sRenderFile = false)
     {
         $aData['sidemenu']['state'] = false;
         $iSurveyID = $aData['surveyid'];
@@ -97,11 +98,11 @@ class Assessments extends Survey_Common_Action
     }
 
     /**
-     * @param array $aData
-     * @param boolean $collectEdit
+     * @param array   $aData       Data
+     * @param boolean $collectEdit Flag for collecting edit
      * @return array
      */
-    private function prepareDataArray(&$aData, $collectEdit = false)
+    private function prepareDataArray(array &$aData, bool $collectEdit = false)
     {
         $iSurveyID = $aData['surveyid'];
         $oSurvey = $aData['survey'];
@@ -136,7 +137,7 @@ class Assessments extends Survey_Common_Action
 
     /**
      * Set search params from Yii grid view.
-     * @param Assessment $oAssessments
+     * @param Assessment $oAssessments Assessment
      * @return void
      */
     private function setSearchParams(Assessment $oAssessments)
@@ -182,7 +183,7 @@ class Assessments extends Survey_Common_Action
      * @param int $surveyid
      * @return void
      */
-    public function _edit($surveyid)
+    public function _edit(int $surveyid)
     {
         $iAsessementId = App()->request->getParam('id');
         $oAssessments = Assessment::model()->findAll("id=:id", [':id' => $iAsessementId]);
@@ -191,7 +192,7 @@ class Assessments extends Survey_Common_Action
             $aData['editData'] = $oAssessments[0]->attributes;
             foreach ($oAssessments as $oAssessment) {
                 $aData['models'][] = $oAssessment;
-                $aData['editData']['name_'.$oAssessment->language] = $oAssessment->name;
+                $aData['editData']['name_'. /** @scrutinizer ignore-type */ $oAssessment->language] = $oAssessment->name;
                 $aData['editData']['assessmentmessage_'.$oAssessment->language] = $oAssessment->message;
             }
             $action = 'assessmentedit';
@@ -202,11 +203,11 @@ class Assessments extends Survey_Common_Action
     }
 
     /**
-     * @param int $iSurveyID
-     * @param string $action
+     * @param int    $iSurveyID Survey ID
+     * @param string $action    Action
      * @return void
      */
-    private function _showAssessments($iSurveyID, $action)
+    private function _showAssessments(int $iSurveyID, string $action)
     {
         $oSurvey = Survey::model()->findByPk($iSurveyID);
 
@@ -240,7 +241,7 @@ class Assessments extends Survey_Common_Action
      * @param int $iSurveyID
      * @return array
      */
-    private function _activateAsessement($iSurveyID)
+    private function _activateAsessement(int $iSurveyID)
     {
         $oSurvey = Survey::model()->findByPk($iSurveyID);
         $oSurvey->assessments = "Y";
@@ -254,7 +255,7 @@ class Assessments extends Survey_Common_Action
      * 
      * @return array $aGroups groupnames in array
      */
-    private function _collectGroupData($oSurvey)
+    private function _collectGroupData(Survey $oSurvey)
     {
         $aGroups = [];
         $db = Yii::app()->db;
@@ -299,10 +300,10 @@ class Assessments extends Survey_Common_Action
 
     /**
      * Inserts an assessment to the database. Receives input from POST
-     * @param int $iSurveyID
+     * @param int $iSurveyID Survey ID
      * @return void
      */
-    private function _add($iSurveyID)
+    private function _add(int $iSurveyID)
     {
         if (Permission::model()->hasSurveyPermission($iSurveyID, 'assessments', 'create')) {
             $bFirst = true;
@@ -326,10 +327,10 @@ class Assessments extends Survey_Common_Action
 
     /**
      * Updates an assessment. Receives input from POST
-     * @param int $iSurveyID
+     * @param int $iSurveyID Survey ID
      * @return void
      */
-    private function _update($iSurveyID)
+    private function _update(int $iSurveyID)
     {
         if (Permission::model()->hasSurveyPermission($iSurveyID, 'assessments', 'update') && App()->request->getPost('id', null) != null) {
 
