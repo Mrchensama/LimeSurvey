@@ -35,6 +35,8 @@ class Authentication extends Survey_Common_Action
      * Show login screen and parse login data
      * Will redirect or echo json depending on ajax call
      * This function is called while accessing the login page: index.php/admin/authentication/sa/login
+     *
+     * @return void
      */
     public function index()
     {
@@ -243,11 +245,16 @@ class Authentication extends Survey_Common_Action
         }
     }
 
+    /**
+     * Runs DB Upgrade.
+     * 
+     * @return void
+     **/
     public static function runDbUpgrade()
     {
         // Check if the DB is up to date
         if (Yii::app()->db->schema->getTable('{{surveys}}')) {
-            $sDBVersion = getGlobalSetting('DBVersion');
+            $sDBVersion = App()->getConfig('DBVersion');
             if ((int) $sDBVersion < Yii::app()->getConfig('dbversionnumber')) {
                 // Try a silent update first
                 Yii::app()->loadHelper('update/updatedb');
@@ -261,9 +268,9 @@ class Authentication extends Survey_Common_Action
     /**
      * Send the forgot password email
      *
-     * @param CActiveRecord User 
+     * @param CActiveRecord $arUser User
      */
-    private function _sendPasswordEmail( $arUser)
+    private function _sendPasswordEmail(CActiveRecord $arUser)
     {
         $mailer = New \LimeMailer;
         $mailer->emailType = 'passwordreminderadminuser';
@@ -297,7 +304,7 @@ class Authentication extends Survey_Common_Action
      * @param string $sSummary Default summary
      * @return string Summary
      */
-    private static function getSummary($sMethod = 'login', $sSummary = '')
+    private static function getSummary(string $sMethod = 'login', string $sSummary = '')
     {
         if (!empty($sSummary)) {
             return $sSummary;
@@ -325,6 +332,8 @@ class Authentication extends Survey_Common_Action
 
     /**
      * Redirects a logged in user to the administration page
+     *
+     * @return void
      */
     private function _redirectIfLoggedIn()
     {
@@ -348,12 +357,12 @@ class Authentication extends Survey_Common_Action
     /**
      * Renders template(s) wrapped in header and footer
      *
-     * @param string $sAction Current action, the folder to fetch views from
+     * @param string $sAction   Current action, the folder to fetch views from
      * @param string $aViewUrls View url(s)
-     * @param array $aData Data to be passed on. Optional.
+     * @param array  $aData     Data to be passed on. Optional.
      * @return void
      */
-    protected function _renderWrappedTemplate($sAction = 'authentication', $aViewUrls = array(), $aData = array(), $sRenderFile = false)
+    protected function _renderWrappedTemplate(string $sAction = 'authentication', array $aViewUrls = array(), array $aData = array(), bool $sRenderFile = false)
     {
         $aData['display']['menu_bars'] = false;
         $aData['language'] = Yii::app()->getLanguage() != Yii::app()->getConfig("defaultlang") ? Yii::app()->getLanguage() : 'default';
