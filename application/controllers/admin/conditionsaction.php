@@ -859,9 +859,9 @@ class conditionsaction extends Survey_Common_Action
                 $result = null;
             }
 
-            if ($result === false) {
+            if (!$result) {
                 return array(gT('Could not insert all conditions.'), 'error');
-            } else if ($result === true) {
+            } else if ($result) {
                 return array(gT('Condition added.'), 'success');
             } else {
                 return array(
@@ -1013,7 +1013,7 @@ class conditionsaction extends Survey_Common_Action
             if ($result) {
                 Yii::app()->setFlashMessage(gT('Condition updated.'), 'success');
             } else {
-                if($result === false) {
+                if(!$result) {
                     Yii::app()->setFlashMessage(gT('Could not update condition.'), 'error');
                 } else {
                     Yii::app()->setFlashMessage(gT("The condition could not be updated! It did not include the question and/or answer upon which the condition was based. Please ensure you have selected a question and an answer."),'error');
@@ -1026,7 +1026,9 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param array $args
+     * Renumber Scenarios.
+     *
+     * @param array $args Arguments
      * @return void
      */
     protected function renumberScenarios(array $args)
@@ -1047,7 +1049,9 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param array $args
+     * Copy Conditions.
+     *
+     * @param array $args Arguments
      * @return void
      */
     protected function copyConditions(array $args)
@@ -1131,11 +1135,12 @@ class conditionsaction extends Survey_Common_Action
 
     /**
      * Switch on action to update/copy/add condition etc
-     * @param string $p_subaction
-     * @param array $args
+     *
+     * @param string $p_subaction Subaction
+     * @param array  $args        Arguments
      * @return void
      */
-    protected function applySubaction($p_subaction, array $args)
+    protected function applySubaction(string $p_subaction, array $args)
     {
         /** @var string $p_cid */
         /** @var string $qid */
@@ -1195,26 +1200,26 @@ class conditionsaction extends Survey_Common_Action
     /**
      * Renders template(s) wrapped in header and footer
      *
-     * @param string $sAction Current action, the folder to fetch views from
-     * @param string|array $aViewUrls View url(s)
-     * @param array $aData Data to be passed on. Optional.
+     * @param string       $sAction     Current action, the folder to fetch views from
+     * @param string|array $aViewUrls   View url(s)
+     * @param array        $aData       Data to be passed on. Optional.
+     * @param bool         $sRenderFile Flag for rendering files
      * @return void
      */
-    protected function _renderWrappedTemplate($sAction = 'conditions', $aViewUrls = array(), $aData = array(), $sRenderFile = false)
+    protected function _renderWrappedTemplate(string $sAction = 'conditions', array $aViewUrls = array(), array $aData = array(), bool $sRenderFile = false)
     {
         ////$aData['display']['menu_bars'] = false;
         parent::_renderWrappedTemplate($sAction, $aViewUrls, $aData, $sRenderFile);
     }
 
     /**
-     * @param array $questionlist
+     * @param array $questionlist Question List
      * @return array
      */
     protected function getTheseRows(array $questionlist)
     {
         $theserows = array();
         foreach ($questionlist as $ql) {
-
             $result = Question::model()->with(array(
                 'group' => array(
                     'condition' => 'questiongroupl10ns.language = :lang',
@@ -1244,7 +1249,9 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param array $postquestionlist
+     * Returns Post Rows.
+     *
+     * @param array $postquestionlist Post Question List
      * @return array
      */
     protected function getPostRows(array $postquestionlist)
@@ -1270,7 +1277,9 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param int $qid
+     * Returns Question Title and Text by given Question ID.
+     *
+     * @param int $qid Question ID
      * @return array (title, question text)
      */
     protected function getQuestionTitleAndText($qid)
@@ -1280,6 +1289,8 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
+     * Returns Survey is anonymized.
+     *
      * @return boolean True if anonymized == 'Y' for this survey
      */
     protected function getSurveyIsAnonymized()
@@ -1289,7 +1300,8 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param int $qid
+     * Returns Question Rows.
+     *
      * @return array
      */
     protected function getQuestionRows()
@@ -1312,11 +1324,13 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param int $qid
-     * @param array $qrows
+     * Returns Question List.
+     *
+     * @param int $qid     Question ID
+     * @param array $qrows Question Rows
      * @return array
      */
-    protected function getQuestionList($qid, array $qrows)
+    protected function getQuestionList(int $qid, array $qrows)
     {
         $position = "before";
         $questionlist = array();
@@ -1334,11 +1348,13 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param int $qid
-     * @param array $qrows
+     * Returns Post Question List.
+     *
+     * @param int $qid     Question ID
+     * @param array $qrows Question Rows
      * @return array
      */
-    protected function getPostQuestionList($qid, array $qrows)
+    protected function getPostQuestionList(int $qid, array $qrows)
     {
         $position = "before";
         $postquestionlist = array();
@@ -1355,7 +1371,9 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param array $theserows
+     * Returns C Answers and C Questions.
+     *
+     * @param array $theserows Rows
      * @return array (cquestion, canswers)
      */
     protected function getCAnswersAndCQuestions(array $theserows)
@@ -1673,14 +1691,16 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param int $qid
-     * @param int $gid
-     * @param array $conditionsList
-     * @param array $pquestions
-     * @return string html
+     * Returns Copy Form.
+     *
+     * @param int   $qid            Question ID
+     * @param int   $gid            Group ID
+     * @param array $conditionsList Condition List
+     * @param array $pquestions     Questions
+     * @return string html  
      * @throws CException
      */
-    protected function getCopyForm($qid, $gid, array $conditionsList, array $pquestions)
+    protected function getCopyForm(int $qid, int $gid, array $conditionsList, array $pquestions)
     {
         App()->getClientScript()->registerScriptFile(App()->getConfig('adminscripts').'checkgroup.js', LSYii_ClientScript::POS_BEGIN);
 
@@ -1710,7 +1730,8 @@ class conditionsaction extends Survey_Common_Action
 
     /**
      * Get html for add/edit condition form
-     * @param array $args
+     *
+     * @param array $args Arguments
      * @return string
      */
     protected function getEditConditionForm(array $args)
@@ -1791,7 +1812,9 @@ class conditionsaction extends Survey_Common_Action
 
     /**
      * Form used in quick-add modal
-     * @param array $args
+     *
+     * @param array $args Arguments
+     * @return string
      */
     protected function getQuickAddConditionForm(array $args)
     {
@@ -1821,12 +1844,14 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param array $cquestions
+     * Returns Js Answers to select.
+     *
+     * @param array  $cquestions   Questions
      * @param string $p_cquestions Question SGID
-     * @param array $p_canswers E.g. array('A2')
+     * @param array  $p_canswers   E.g. array('A2')
      * @return string JS code
      */
-    protected function getJsAnswersToSelect($cquestions, $p_cquestions, $p_canswers)
+    protected function getJsAnswersToSelect(array $cquestions, string $p_cquestions, array $p_canswers)
     {
         $js_getAnswers_onload = "";
         foreach ($cquestions as $cqn) {
@@ -1845,10 +1870,12 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param string $subaction
+     * Returns Edit Condition Const.
+     *
+     * @param string $subaction Subaction
      * @return string
      */
-    protected function getEDITConditionConst($subaction)
+    protected function getEDITConditionConst(string $subaction)
     {
         $request = Yii::app()->request;
         $EDITConditionConst = HTMLEscape($request->getPost('ConditionConst',''));
@@ -1859,10 +1886,12 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param string $subaction
+     * Returns Edit Condition RegEx.
+     *
+     * @param string $subaction Subaction
      * @return string
      */
-    protected function getEDITConditionRegexp($subaction)
+    protected function getEDITConditionRegexp(string $subaction)
     {
         $request = Yii::app()->request;
         $EDITConditionRegexp = '';
@@ -1879,11 +1908,12 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * Generates some JS used by form
-     * @param string $subaction
+     * Generates some JS used by form.
+     *
+     * @param string $subaction Subaction
      * @return string JS
      */
-    protected function getEditFormJavascript($subaction)
+    protected function getEditFormJavascript(string $subaction)
     {
         $request = Yii::app()->request;
         $aViewUrls = array('output' => '');
@@ -1955,6 +1985,7 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
+     * Returns Edit Source Tab.
      * @return string Either '#SRCTOKENATTRS' or '#SRCPREVQUEST'; defaults to '#SRCPREVQUEST' if nothing is posted
      */
     protected function getEditSourceTab()
@@ -1970,6 +2001,7 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
+     * Returns Edit Target Tab.
      * @return string Predfined, constant, questions, token field or regexp; defaults to predefined
      */
     protected function getEditTargetTab()
@@ -1992,12 +2024,13 @@ class conditionsaction extends Survey_Common_Action
 
     /**
      * The navigator that lets user quickly move to another question within the survey.
+     *
      * @param array $theserows
      * @param array $postrows
-     * @param array $args
+     * @param array $args     Arguments
      * @return string html
      */
-    protected function getQuestionNavOptions($theserows, $postrows, $args)
+    protected function getQuestionNavOptions(array $theserows, array $postrows, array $args)
     {
         /** @var integer $gid */
         /** @var integer $qid */
@@ -2036,11 +2069,13 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
+     * Create Navigator Url.
+     *
      * @param int $gid Group id
      * @param int $qid Questino id
      * @return string url
      */
-    protected function createNavigatorUrl($gid, $qid)
+    protected function createNavigatorUrl(int $gid, int $qid)
     {
         return $this->getController()->createUrl(
             '/admin/conditions/sa/index/subaction/editconditionsform/',
@@ -2053,13 +2088,14 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * Javascript to match question with answer
-     * @param array $canswers
-     * @param array $cquestions
-     * @param boolean $surveyIsAnonymized
+     * Javascript to match question with answer.
+     *
+     * @param array   $canswers           Answers
+     * @param array   $cquestions         Questions
+     * @param boolean $surveyIsAnonymized Survey Anonymized
      * @return string js
      */
-    protected function getJavascriptForMatching(array $canswers, array $cquestions, $surveyIsAnonymized)
+    protected function getJavascriptForMatching(array $canswers, array $cquestions, bool $surveyIsAnonymized)
     {
         $javascriptpre = ""
             . "\tvar Fieldnames = new Array();\n"
@@ -2099,6 +2135,8 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
+     * Returns Attribute name.
+     *
      * @param string[] $extractedTokenAttr
      * @return string
      */
@@ -2120,12 +2158,14 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param array $rows
-     * @param string $leftOperandType
-     * @param string $rightOperandType
+     * Returns Hidden Fields.
+     *
+     * @param array $rows               Rows
+     * @param string $leftOperandType   Left Opperand Type
+     * @param string $rightOperandType  Right Opperand Type
      * @return string html
      */
-    protected function getHiddenFields(array $rows, $leftOperandType, $rightOperandType)
+    protected function getHiddenFields(array $rows, string $leftOperandType, string $rightOperandType)
     {
         $html = '';
 
@@ -2175,10 +2215,12 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * @param int $qid
+     * Returns All Scenarios.
+     *
+     * @param int $qid Question ID
      * @return CActiveRecord[] Conditions
      */
-    protected function getAllScenarios($qid)
+    protected function getAllScenarios(int $qid)
     {
         $criteria = new CDbCriteria;
         $criteria->select = 'scenario'; // only select the 'scenario' column
@@ -2191,12 +2233,13 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * After add/delete/etc, redirect to conditions start page
-     * @param int $qid
-     * @param int $gid
+     * After add/delete/etc, redirect to conditions start page.
+     *
+     * @param int $qid Question ID
+     * @param int $gid Group ID
      * @return void
      */
-    protected function redirectToConditionStart($qid, $gid)
+    protected function redirectToConditionStart(int $qid, int $gid)
     {
         $url = $this->getcontroller()->createUrl(
             '/admin/conditions/sa/index/subaction/editconditionsform/',
@@ -2210,20 +2253,22 @@ class conditionsaction extends Survey_Common_Action
     }
 
     /**
-     * Decides if "Default scenario" should be shown or not
-     * @param string $subaction
-     * @param int $scenariocount
+     * Decides if "Default scenario" should be shown or not.
+     *
+     * @param string $subaction     Subaction
+     * @param int    $scenariocount Scenario Count
      * @return boolean
      */
-    protected function shouldShowScenario($subaction, $scenariocount)
+    protected function shouldShowScenario(string $subaction, int $scenariocount)
     {
         return $subaction != "editthiscondition" && ($scenariocount == 1 || $scenariocount == 0);
     }
 
     /**
-     * Used to calculate size of select box
+     * Used to calculate size of select box.
+     *
      * @todo Not used
-     * @param array $cquestions
+     * @param array $cquestions Questions
      * @return int
      */
     protected function getQCount(array $cquestions)
