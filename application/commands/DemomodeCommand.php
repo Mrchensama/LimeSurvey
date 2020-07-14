@@ -13,7 +13,13 @@
 class DemomodeCommand extends CConsoleCommand
 {
 
-    public function run($sArgument)
+    /**
+     * Runs the DemoMode command.
+     * 
+     * @param string $sArgument
+     * @return void
+     **/
+    public function run(string $sArgument)
     {
         if (isset($sArgument) && isset($sArgument[0]) && $sArgument[0] = 'yes') {
             echo "\n###### Restoring installation to demomode #####\n";
@@ -31,6 +37,11 @@ class DemomodeCommand extends CConsoleCommand
 
     }
 
+    /**
+     * Resets the database.
+     *
+     * @return void
+     **/
     private function _resetDatabase()
     {
         Yii::import('application.helpers.common_helper', true);
@@ -81,7 +92,7 @@ class DemomodeCommand extends CConsoleCommand
         $surveyidresult = dbGetTablesLike("survey\_%");
         foreach ($surveyidresult as $sv) {
             if (strpos($sv, 'survey_links') === false && strpos($sv, 'survey_url_parameters') === false) {
-                                Yii::app()->db->createCommand("drop table ".$sv)->execute();
+                Yii::app()->db->createCommand("drop table ".$sv)->execute();
             }
         }
 
@@ -98,9 +109,13 @@ class DemomodeCommand extends CConsoleCommand
         }
     }
 
+    /**
+     * Reset files.
+     *
+     * @return void
+     **/
     private function _resetFiles()
-    {
-        
+    {        
         $sBaseUploadDir = dirname(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR.'upload';
 
         SureRemoveDir($sBaseUploadDir.DIRECTORY_SEPARATOR.'surveys', false, ['index.html']);
@@ -110,6 +125,11 @@ class DemomodeCommand extends CConsoleCommand
         SureRemoveDir($sBaseUploadDir.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.'question', false);
     }
 
+    /**
+     * Creates Demo.
+     *
+     * @return void
+     **/
     private function _createDemo()
     {
         Yii::app()->loadHelper('admin/import');
@@ -131,10 +151,18 @@ class DemomodeCommand extends CConsoleCommand
         }
         require_once(__DIR__.'/../helpers/admin/activate_helper.php');
         array_map('activateSurvey', $surveysToActivate);
-        }    
+    }    
 
 }
 
+/**
+ * Removes Directory.
+ *
+ * @param string $dir      Directory
+ * @param bool   $DeleteMe Delete Flag
+ * @param array  $excludes Exclude Files Array
+ * @return void
+ **/
 function SureRemoveDir($dir, $DeleteMe, $excludes=[])
 {
     if (!$dh = @opendir($dir)) {
