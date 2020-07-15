@@ -112,7 +112,7 @@ class Assessments extends Survey_Common_Action
         $oAssessments = Assessment::model();
         $oAssessments->sid = $iSurveyID;
 
-        $aData['groups'] = $this->_collectGroupData($oSurvey, $aData);
+        $aData['groups'] = $this->_collectGroupData($oSurvey);
         $this->setSearchParams($oAssessments);
         $aData['model'] = $oAssessments;
         if (isset($_POST['pageSize'])) {
