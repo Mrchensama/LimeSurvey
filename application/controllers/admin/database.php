@@ -132,10 +132,10 @@ class database extends Survey_Common_Action
         if ($sAction == "updatequestion" && Permission::model()->hasSurveyPermission($this->iSurveyID, 'surveycontent', 'update')) {
             $this->actionUpdateQuestion($this->iSurveyID);
         }
-        if (($sAction == "updatesurveylocalesettings") && (Permission::model()->hasSurveyPermission($this->iSurveyID, 'surveylocale', 'update') || Permission::model()->hasSurveyPermission($iSurveyID, 'surveysettings', 'update'))) {
+        if (($sAction == "updatesurveylocalesettings") && (Permission::model()->hasSurveyPermission($this->iSurveyID, 'surveylocale', 'update') || Permission::model()->hasSurveyPermission($this->iSurveyID, 'surveysettings', 'update'))) {
             $this->actionUpdateSurveyLocaleSettings($this->iSurveyID);
         }
-        if (($sAction == "updatesurveylocalesettings_generalsettings") && (Permission::model()->hasSurveyPermission($this->iSurveyID, 'surveylocale', 'update') || Permission::model()->hasSurveyPermission($iSurveyID, 'surveysettings', 'update'))) {
+        if (($sAction == "updatesurveylocalesettings_generalsettings") && (Permission::model()->hasSurveyPermission($this->iSurveyID, 'surveylocale', 'update') || Permission::model()->hasSurveyPermission($this->iSurveyID, 'surveysettings', 'update'))) {
             $this->actionUpdateSurveyLocaleSettingsGeneralSettings($this->iSurveyID);
         }
 
@@ -147,13 +147,14 @@ class database extends Survey_Common_Action
      * This is a convenience function to update/delete answer default values. If the given
      * $defaultvalue is empty then the entry is removed from table defaultvalues
      *
-     * @param integer $qid   Question ID
-     * @param integer $scale_id  Scale ID
+     * @param int    $qid          Question ID
+     * @param int    $sqid         Survey ID
+     * @param int    $scale_id     Scale ID
      * @param string $specialtype  Special type (i.e. for  'Other')
      * @param string $language     Language (defaults are language specific)
-     * @param mixed $defaultvalue    The default value itself
+     * @param mixed  $defaultvalue The default value itself
      */
-    public function _updateDefaultValues($qid, $sqid, $scale_id, $specialtype, $language, $defaultvalue)
+    public function _updateDefaultValues(int $qid, int $sqid, int $scale_id, string $specialtype, string $language, mixed $defaultvalue)
     {
         $arDefaultValue = DefaultValue::model()
             ->find(
@@ -210,10 +211,10 @@ class database extends Survey_Common_Action
 
     /**
      * action to do when update default value
-     * @param integer $iSurveyID
+     * @param int$iSurveyID Survey ID
      * @return void (redirect)
      */
-    private function actionUpdateDefaultValues($iSurveyID)
+    private function actionUpdateDefaultValues(int $iSurveyID)
     {
         $oSurvey = Survey::model()->findByPk($iSurveyID);
         $aSurveyLanguages = $oSurvey->allLanguages;
@@ -261,7 +262,7 @@ class database extends Survey_Common_Action
                     }
 
                     if (Yii::app()->request->getPost('defaultanswerscale_0_'.$sLanguage) == 'EM') {
-// Case EM, write expression to database
+                        // Case EM, write expression to database
                         $this->_updateDefaultValues($this->iQuestionID, 0, 0, '', $sLanguage, Yii::app()->request->getPost('defaultanswerscale_0_'.$sLanguage.'_EM'));
                     } else {
                         // Case "other", write list value to database
@@ -573,11 +574,11 @@ class database extends Survey_Common_Action
 
     /**
      * action to do when update question
-     * @param integer $iSurveyID
+     * @param int $iSurveyID Survey ID
      * @return void (redirect)
      * @todo Deprecated, replaced by questionedit.php
      */
-    private function actionUpdateQuestion($iSurveyID)
+    private function actionUpdateQuestion(int $iSurveyID)
     {
         $oSurvey = Survey::model()->findByPk($iSurveyID);
 
@@ -594,7 +595,6 @@ class database extends Survey_Common_Action
         } else {
             $sQuestionType = Yii::app()->request->getPost('type');
         }
-
 
         /* Check if we need to save QuestionAttribute testing advancedquestionsettings , see mantis #14563 */
         if(Yii::app()->request->getPost('advancedquestionsettingsLoaded',true)) {
@@ -841,10 +841,10 @@ class database extends Survey_Common_Action
 
     /**
      * action to do when update survey seetings + survey language
-     * @param integer $iSurveyID
+     * @param int $iSurveyID
      * @return void (redirect)
      */
-    private function actionUpdateSurveyLocaleSettings($iSurveyID)
+    private function actionUpdateSurveyLocaleSettings(int $iSurveyID)
     {
         $oSurvey = Survey::model()->findByPk($iSurveyID);
         $languagelist = $oSurvey->additionalLanguages;
@@ -1121,10 +1121,10 @@ class database extends Survey_Common_Action
 
     /**
      * Action for the page "General settings".
-     * @param int $iSurveyID
+     * @param int $iSurveyID Survey ID
      * @return void
      */
-    protected function actionUpdateSurveyLocaleSettingsGeneralSettings($iSurveyID)
+    protected function actionUpdateSurveyLocaleSettingsGeneralSettings(int $iSurveyID)
     {
         $oSurvey = Survey::model()->findByPk($iSurveyID);
         $request = Yii::app()->request;
@@ -1203,12 +1203,12 @@ class database extends Survey_Common_Action
     }
 
     /**
-     * @param Survey $oSurvey
-     * @param string $fieldArrayName
-     * @param mixed $newValue
+     * @param Survey $oSurvey        Survey
+     * @param string $fieldArrayName Field Name
+     * @param mixed  $newValue       New Value
      * @return mixed
      */
-    private function _filterEmptyFields($oSurvey, $fieldArrayName, $newValue = null)
+    private function _filterEmptyFields(Survey $oSurvey, string $fieldArrayName, mixed $newValue = null)
     {
         $aSurvey = $oSurvey->attributes;
 
@@ -1243,10 +1243,10 @@ class database extends Survey_Common_Action
 
     /**
      * action to do when adding a new question (insert or copy)
-     * @param integer $iSurveyID
+     * @param int $iSurveyID Survey ID
      * @return void (redirect)
      */
-    private function actionInsertCopyQuestion($iSurveyID)
+    private function actionInsertCopyQuestion(int $iSurveyID)
     {
         /** @var Survey $survey */
         $survey = Survey::model()->findByPk($iSurveyID);
@@ -1303,7 +1303,7 @@ class database extends Survey_Common_Action
             if (count($aErrors)) {
                 foreach ($aErrors as $sAttribute=>$aStringErrors) {
                     foreach ($aStringErrors as $sStringErrors) {
-                                            Yii::app()->setFlashMessage(sprintf(gT("Question could not be created with error on %s: %s"), $sAttribute, $sStringErrors), 'error');
+                        Yii::app()->setFlashMessage(sprintf(gT("Question could not be created with error on %s: %s"), $sAttribute, $sStringErrors), 'error');
                     }
                 }
             }
@@ -1319,7 +1319,7 @@ class database extends Survey_Common_Action
             if (count($aErrors)) {
                 foreach ($aErrors as $sAttribute=>$aStringErrors) {
                     foreach ($aStringErrors as $sStringErrors) {
-                                            Yii::app()->setFlashMessage(sprintf(gT("Question could not be created with error on %s: %s"), $sAttribute, $sStringErrors), 'error');
+                        Yii::app()->setFlashMessage(sprintf(gT("Question could not be created with error on %s: %s"), $sAttribute, $sStringErrors), 'error');
                     }
                 }
             }
@@ -1338,7 +1338,7 @@ class database extends Survey_Common_Action
                         if (count($aErrors)) {
                             foreach ($aErrors as $sAttribute=>$aStringErrors) {
                                 foreach ($aStringErrors as $sStringErrors) {
-                                                                    Yii::app()->setFlashMessage(sprintf(gT("Question in language %s could not be created with error on %s: %s"), $alang, $sAttribute, $sStringErrors), 'error');
+                                    Yii::app()->setFlashMessage(sprintf(gT("Question in language %s could not be created with error on %s: %s"), $alang, $sAttribute, $sStringErrors), 'error');
                                 }
                             }
                         }
