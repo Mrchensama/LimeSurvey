@@ -153,7 +153,6 @@ class TwigCommand extends CConsoleCommand  {
           $aQuestionData = array(); // See todo
           if (file_exists($sTwigFile)) {
             $this->aLogs[$sQuestionName] = "$sTwigFile";
-            $line = file_get_contents($sTwigFile);
           } elseif (is_dir($sQuestionDirectory) && $sQuestionName != "arrays") {
             // Recursive step
             $this->actionGenerateQuestionsCache($sQuestionDirectory);
@@ -183,7 +182,6 @@ class TwigCommand extends CConsoleCommand  {
         $sTwigFile = $oTwigFile[0];
         if (file_exists($sTwigFile)) {
           $this->aLogs["twig"] = "$sTwigFile";
-          $line  = file_get_contents($sTwigFile);
         }
       }
     }
