@@ -362,7 +362,7 @@ class Authentication extends Survey_Common_Action
      * @param array  $aData     Data to be passed on. Optional.
      * @return void
      */
-    protected function _renderWrappedTemplate(string $sAction = 'authentication', array $aViewUrls = array(), array $aData = array(), bool $sRenderFile = false)
+    protected function _renderWrappedTemplate(string $sAction = 'authentication', $aViewUrls = array(), array $aData = array(), bool $sRenderFile = false)
     {
         $aData['display']['menu_bars'] = false;
         $aData['language'] = Yii::app()->getLanguage() != Yii::app()->getConfig("defaultlang") ? Yii::app()->getLanguage() : 'default';
