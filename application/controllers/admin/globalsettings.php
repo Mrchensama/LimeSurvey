@@ -103,6 +103,14 @@ class GlobalSettings extends Survey_Common_Action
         $data['sideMenuBehaviour'] = getGlobalSetting('sideMenuBehaviour');
         $data['aListOfThemeObjects'] = AdminTheme::getAdminThemeList();
 
+        // get user administration setting
+        $data['sGlobalSendAdminCreationEmail'] = 1;
+        $data['sGlobalShowPasswordInAdminCreationEmail'] = 1;
+        $data['sGlobalAdminCreationEmailTemplate']= "Bluuuubbbbbbbbbbb";
+        App()->loadHelper("admin/htmleditor");
+        $data['scripts'] = PrepareEditorScript(false, $this->getController());
+        $data['sCurrentDefaultLanguage'] = getGlobalSetting('defaultlang');
+       
         $this->_renderWrappedTemplate('', 'globalSettings_view', $data);
     }
 
@@ -327,6 +335,10 @@ class GlobalSettings extends Survey_Common_Action
         SettingGlobal::setSetting('timeadjust', $savetime);
         SettingGlobal::setSetting('usercontrolSameGroupPolicy', strip_tags(Yii::app()->getRequest()->getPost('usercontrolSameGroupPolicy')));
 
+        //user admininistration setting
+        SettingGlobal::setSetting('sendadmincreationemail', App()->getRequest()->getPost('sendadmincreationemail'));
+        SettingGlobal::setSetting('showpasswordinadmincreationemail', App()->getRequest()->getPost('showpasswordinadmincreationemail'));
+      
         Yii::app()->session['flashmessage'] = $warning.gT("Global settings were saved.");
 
         // Redirect if user clicked save-and-close-button

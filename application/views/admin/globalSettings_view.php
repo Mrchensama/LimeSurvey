@@ -24,6 +24,7 @@ LS.renderBootstrapSwitch();
         <li role="presentation" ><a role="tab" data-toggle="tab" href='#general'><?php eT("General"); ?></a></li>
         <li role="presentation" ><a role="tab" data-toggle="tab" href='#email'><?php eT("Email settings"); ?></a></li>
         <li role="presentation" ><a role="tab" data-toggle="tab" href='#bounce'><?php eT("Bounce settings"); ?></a></li>
+        <li role="presentation" ><a role="tab" data-toggle="tab" href='#useradmin'><?php eT("User administration"); ?></a></li>
         <li role="presentation" ><a role="tab" data-toggle="tab" href='#security'><?php eT("Security"); ?></a></li>
         <li role="presentation" ><a role="tab" data-toggle="tab" href='#presentation'><?php eT("Presentation"); ?></a></li>
         <li role="presentation" ><a role="tab" data-toggle="tab" href='#language'><?php eT("Language"); ?></a></li>
@@ -60,6 +61,17 @@ LS.renderBootstrapSwitch();
     <div id="bounce" class="tab-pane col-md-10 col-md-offset-1">
         <?php $this->renderPartial("./global_settings/_bounce"); ?>
     </div>
+
+    <div id="useradmin" class="tab-pane col-md-10 col-md-offset-1">
+        <?php $this->renderPartial("./global_settings/_useradministration", [
+                'sSendAdminCreationEmail'           => $sGlobalSendAdminCreationEmail,
+                'sShowPasswordInAdminCreationEmail' => $sGlobalShowPasswordInAdminCreationEmail,
+                'sAdminCreationEmailTemplate'       => $sGlobalAdminCreationEmailTemplate,
+               
+            ]);
+        ?>
+    </div>
+
 
     <div id="security" class="tab-pane col-md-10 col-md-offset-1">
         <?php $this->renderPartial("./global_settings/_security"); ?>
