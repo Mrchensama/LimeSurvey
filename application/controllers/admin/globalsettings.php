@@ -104,9 +104,10 @@ class GlobalSettings extends Survey_Common_Action
         $data['aListOfThemeObjects'] = AdminTheme::getAdminThemeList();
 
         // get user administration setting
-        $data['sGlobalSendAdminCreationEmail'] = 1;
-        $data['sGlobalShowPasswordInAdminCreationEmail'] = 1;
-        $data['sGlobalAdminCreationEmailTemplate']= "Bluuuubbbbbbbbbbb";
+        $data['sGlobalSendAdminCreationEmail'] = getGlobalSetting('sendadmincreationemail');
+        $data['sGlobalAdminCreationEmailTemplate'] = getGlobalSetting('admincreationemailtemplate');
+        $data['sGlobalAdminCreationEmailSubject'] = getGlobalSetting('admincreationemailsubject');
+
         App()->loadHelper("admin/htmleditor");
         $data['scripts'] = PrepareEditorScript(false, $this->getController());
         $data['sCurrentDefaultLanguage'] = getGlobalSetting('defaultlang');
@@ -248,7 +249,7 @@ class GlobalSettings extends Survey_Common_Action
         if (!Yii::app()->getConfig('demoMode')) {
             $sTemplate = Yii::app()->getRequest()->getPost("defaulttheme");
             if (array_key_exists($sTemplate, getTemplateList())) {
-// Filter template name
+            // Filter template name
                 SettingGlobal::setSetting('defaulttheme', $sTemplate);
             }
             SettingGlobal::setSetting('x_frame_options', Yii::app()->getRequest()->getPost('x_frame_options'));
@@ -337,7 +338,8 @@ class GlobalSettings extends Survey_Common_Action
 
         //user admininistration setting
         SettingGlobal::setSetting('sendadmincreationemail', App()->getRequest()->getPost('sendadmincreationemail'));
-        SettingGlobal::setSetting('showpasswordinadmincreationemail', App()->getRequest()->getPost('showpasswordinadmincreationemail'));
+        SettingGlobal::setSetting('admincreationemailsubject', App()->getRequest()->getPost('admincreationemailsubject'));
+        SettingGlobal::setSetting('admincreationemailtemplate', App()->getRequest()->getPost('admincreationemailtemplate'));
       
         Yii::app()->session['flashmessage'] = $warning.gT("Global settings were saved.");
 

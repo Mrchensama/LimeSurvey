@@ -11,6 +11,9 @@ App()->getClientScript()->registerScript('GlobalSettingsBSSwitcher', "
 LS.renderBootstrapSwitch();
 ", LSYii_ClientScript::POS_POSTSCRIPT);
 
+if (isset($scripts)) {
+    echo $scripts;
+ }
 ?>
 <script type="text/javascript">
     var msgCantRemoveDefaultLanguage = '<?php eT("You can't remove the default language.",'js'); ?>';
@@ -61,13 +64,13 @@ LS.renderBootstrapSwitch();
     <div id="bounce" class="tab-pane col-md-10 col-md-offset-1">
         <?php $this->renderPartial("./global_settings/_bounce"); ?>
     </div>
-
+    
+    
     <div id="useradmin" class="tab-pane col-md-10 col-md-offset-1">
         <?php $this->renderPartial("./global_settings/_useradministration", [
-                'sSendAdminCreationEmail'           => $sGlobalSendAdminCreationEmail,
-                'sShowPasswordInAdminCreationEmail' => $sGlobalShowPasswordInAdminCreationEmail,
-                'sAdminCreationEmailTemplate'       => $sGlobalAdminCreationEmailTemplate,
-               
+                'sSendAdminCreationEmail'       => $sGlobalSendAdminCreationEmail,
+                'sAdminCreationEmailSubject'    => $sGlobalAdminCreationEmailSubject,   
+                'sAdminCreationEmailTemplate'   => $sGlobalAdminCreationEmailTemplate,     
             ]);
         ?>
     </div>
