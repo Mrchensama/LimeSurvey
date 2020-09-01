@@ -1038,7 +1038,7 @@ class LsDefaultDataSets
         $template .= "<p></p><p>" . gT("You can use now the following credentials to log into the site") . ":</p>";
         $template .= "<p><strong>" . gT("Username") . "</strong>: {USERNAME}</p>";
         $template .= "<p><strong>" . gt("Password") . "</strong>: {PASSWORD}</p>";
-        $template .= "<p>{LOGINURL}</p>";
+        $template .= '<p><a href="{LOGINURL}">'.gT("Click here to login").'</a></p>';
         $template .= "<p>" . gT("If you have any questions regarding this email, please do not hesitate to contact the site administrator at") . " {SITEADMINEMAIL}.</p><p> </p>";
         $template .= "<p>" . gT("Thank you") . "!</p>";
 

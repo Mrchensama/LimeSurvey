@@ -808,7 +808,7 @@ class UserAction extends Survey_Common_Action
     {
         $aAdminEmail = [];
         $siteName = Yii::app()->getConfig("sitename");
-        $loginUrl = "<p><a href='" . $this->getController()->createAbsoluteUrl("/admin") . "'>" . gT("Click here to log in.") . "</a></p><br/>\n";
+        $loginUrl = $this->getController()->createAbsoluteUrl("/admin");
         $siteAdminEmail = Yii::app()->getConfig("siteadminemail");
         $emailSubject = Yii::app()->getConfig("admincreationemailsubject");
         $emailTemplate = Yii::app()->getConfig("admincreationemailtemplate");
